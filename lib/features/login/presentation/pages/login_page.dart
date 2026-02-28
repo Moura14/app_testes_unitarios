@@ -17,6 +17,11 @@ class _LoginPageState extends State<LoginPage> {
   final userNameController = TextEditingController();
   final passwordController = TextEditingController();
 
+  initState() {
+    super.initState();
+    controller.getUser();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

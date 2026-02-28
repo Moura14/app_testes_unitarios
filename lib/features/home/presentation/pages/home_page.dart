@@ -1,4 +1,7 @@
+import 'package:app_testes_unitarios/features/login/presentation/controllers/login_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:get_it/get_it.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -8,11 +11,41 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+
+  final controller = GetIt.I<LoginController>();
+
+  @override
+  void initState() {
+    super.initState();
+    controller.getUser();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(
-        child: Center(child: Text('Drawer Content')),
+      drawer: Observer(
+        builder: (_) {
+          return Drawer(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CircleAvatar(
+                  radius: 80,
+                    backgroundImage: NetworkImage(controller.userInfo?.image ?? 'https://www.pngall.com/wp-content/uploads/5/User-Profile-PNG-High-Quality-Image.png'),
+                  ),
+                  const SizedBox(height: 20),
+                  Divider(),
+                  const SizedBox(height: 20),
+                Text('Nome: ${controller.userInfo?.firstName ?? 'No user'} ${controller.userInfo?.lastName ?? ''}'),
+                Text('Email: ${controller.userInfo?.email ?? 'No email'}'),
+                Text('Telefone: ${controller.userInfo?.username ?? 'No phone'}'),
+              ],
+            ),
+          );
+        },
       ),
       appBar: AppBar(
         leading: Builder(
@@ -24,7 +57,7 @@ class _HomePageState extends State<HomePage> {
                     Scaffold.of(context).openDrawer();
                   },
                   child: CircleAvatar(
-                    backgroundImage: NetworkImage('https://avatars.githubusercontent.com/u/105419583?v=4'),
+                    backgroundImage: NetworkImage(controller.userInfo?.image ?? 'https://www.pngall.com/wp-content/uploads/5/User-Profile-PNG-High-Quality-Image.png'),
                   ),
                 ),
               );
