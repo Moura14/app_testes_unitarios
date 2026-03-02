@@ -2,6 +2,7 @@ import 'package:app_testes_unitarios/features/login/presentation/controllers/log
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
+import 'package:app_testes_unitarios/features/home/presentation/pages/home_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -19,7 +20,7 @@ class _LoginPageState extends State<LoginPage> {
 
   initState() {
     super.initState();
-    controller.getUser();
+    
   }
 
   @override
@@ -65,14 +66,24 @@ class _LoginPageState extends State<LoginPage> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black
                   ),
-                  onPressed: (){
-                    if(controller.errorMessage != null){
+                  onPressed: () async {
+                    // clear previous error
+                    controller.errorMessage = null;
+
+                    await controller.login(userNameController.text, passwordController.text);
+
+                    if (controller.errorMessage != null) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text(controller.errorMessage!))
                       );
+                    } else if (controller.user != null) {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (_) => HomePage()),
+                      );
                     }
-                    controller.login(userNameController.text, passwordController.text);
-                  }, 
+                  },
+ 
                   child: Text('Login', style: TextStyle(color: Colors.white, fontSize: 15))),
               );
               },

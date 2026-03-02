@@ -60,6 +60,24 @@ mixin _$LoginController on _LoginController, Store {
     });
   }
 
+  late final _$userInfoAtom = Atom(
+    name: '_LoginController.userInfo',
+    context: context,
+  );
+
+  @override
+  UserModel? get userInfo {
+    _$userInfoAtom.reportRead();
+    return super.userInfo;
+  }
+
+  @override
+  set userInfo(UserModel? value) {
+    _$userInfoAtom.reportWrite(value, super.userInfo, () {
+      super.userInfo = value;
+    });
+  }
+
   late final _$loginAsyncAction = AsyncAction(
     '_LoginController.login',
     context: context,
@@ -70,12 +88,23 @@ mixin _$LoginController on _LoginController, Store {
     return _$loginAsyncAction.run(() => super.login(username, password));
   }
 
+  late final _$getUserAsyncAction = AsyncAction(
+    '_LoginController.getUser',
+    context: context,
+  );
+
+  @override
+  Future<void> getUser() {
+    return _$getUserAsyncAction.run(() => super.getUser());
+  }
+
   @override
   String toString() {
     return '''
 isLoading: ${isLoading},
 errorMessage: ${errorMessage},
-user: ${user}
+user: ${user},
+userInfo: ${userInfo}
     ''';
   }
 }

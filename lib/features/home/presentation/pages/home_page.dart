@@ -1,3 +1,4 @@
+import 'package:app_testes_unitarios/features/home/presentation/controllers/home_controller.dart';
 import 'package:app_testes_unitarios/features/login/presentation/controllers/login_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -14,11 +15,15 @@ class _HomePageState extends State<HomePage> {
 
 
   final controller = GetIt.I<LoginController>();
+  final homeController = GetIt.I<HomeController>();
 
   @override
   void initState() {
     super.initState();
     controller.getUser();
+    homeController.getProduto().then((_) {
+      print('produtos carregados ${homeController.products.length}');
+    });
   }
 
 
@@ -64,26 +69,127 @@ class _HomePageState extends State<HomePage> {
           }
         )
       ),
-      body: Center(
-        child: GridView.count(
-                crossAxisCount: 2,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-                padding: EdgeInsets.all(16),
-                shrinkWrap: true,
-                children: List.generate(6, (index) {
-        return Container(
-          color: Colors.blue,
-          child: Center(
-              child: Text(
-                'Item $index',
-                style: TextStyle(color: Colors.white),
-              ),
+      body: Observer(
+        builder: (_){
+          print('Observer rebuilding - isLoading: ${homeController.isLoading}, products count: ${homeController.products.length}');
+          
+          if(homeController.isLoading){
+            return Center(child: CircularProgressIndicator());
+          }
+
+          if (homeController.products.isEmpty) {
+            return const Center(child: Text('Nenhum produto disponível'));
+          }
+          
+          print('Renderizando grid com ${homeController.products.length} produtos');
+          return GridView.builder(
+            padding: const EdgeInsets.all(16),
+            shrinkWrap: true,
+            itemCount: homeController.products.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 10,
+              childAspectRatio: 0.75,
+            ),
+            itemBuilder: (context, index) {
+              return Card(
+          elevation: 4,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Observer(
+            builder: (_) {
+              if(homeController.isLoading){
+                return Center(child: CircularProgressIndicator());
+              }
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+            
+                ClipRRect(
+                   borderRadius: const BorderRadius.vertical(
+            top: Radius.circular(16),
+          ),
+          child: Builder(
+            builder: (_) {
+        final imageUrl = homeController.products[index].thumbnail;
+        
+        if (imageUrl == null || imageUrl.isEmpty) {
+          return Container(
+            height: 120,
+            width: double.infinity,
+            color: Colors.grey[300],
+            alignment: Alignment.center,
+            child: Icon(Icons.image, size: 40),
+          );
+        }
+        
+        return Image.network(
+          imageUrl,
+          height: 120,
+          width: double.infinity,
+          fit: BoxFit.cover,
+          errorBuilder: (_, __, ___) => Container(
+            height: 120,
+            color: Colors.grey[300],
+            alignment: Alignment.center,
+            child: Icon(Icons.broken_image),
           ),
         );
-                }),
-              ),
-      ),
-    );
+            },
+          ),
+        ),
+            
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+            
+                        
+                        Text(
+                          '${homeController.products[index].title ?? 'Produto sem título'}',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+            
+                       
+                        Text(
+                          'R\$ ${(index + 1) * 20},00',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.green,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                    
+                        SizedBox(
+                          width: double.infinity,
+                          height: 36,
+                          child: ElevatedButton(
+                            onPressed: () {},
+                            child: const Text('Ver detalhes'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            );
+            },
+          ),
+        );
+        }
+          );
+  }));
+        }
+    
   }
-}
