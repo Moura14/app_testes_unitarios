@@ -45,6 +45,24 @@ mixin _$HomeController on _HomeController, Store {
     });
   }
 
+  late final _$productDetailsModelAtom = Atom(
+    name: '_HomeController.productDetailsModel',
+    context: context,
+  );
+
+  @override
+  ProductDetailsModel? get productDetailsModel {
+    _$productDetailsModelAtom.reportRead();
+    return super.productDetailsModel;
+  }
+
+  @override
+  set productDetailsModel(ProductDetailsModel? value) {
+    _$productDetailsModelAtom.reportWrite(value, super.productDetailsModel, () {
+      super.productDetailsModel = value;
+    });
+  }
+
   late final _$errorMessageAtom = Atom(
     name: '_HomeController.errorMessage',
     context: context,
@@ -73,11 +91,24 @@ mixin _$HomeController on _HomeController, Store {
     return _$getProdutoAsyncAction.run(() => super.getProduto());
   }
 
+  late final _$getProdutoDetalhesAsyncAction = AsyncAction(
+    '_HomeController.getProdutoDetalhes',
+    context: context,
+  );
+
+  @override
+  Future<void> getProdutoDetalhes({required int id}) {
+    return _$getProdutoDetalhesAsyncAction.run(
+      () => super.getProdutoDetalhes(id: id),
+    );
+  }
+
   @override
   String toString() {
     return '''
 isLoading: ${isLoading},
 products: ${products},
+productDetailsModel: ${productDetailsModel},
 errorMessage: ${errorMessage}
     ''';
   }

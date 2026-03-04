@@ -1,4 +1,5 @@
 import 'package:app_testes_unitarios/features/home/presentation/controllers/home_controller.dart';
+import 'package:app_testes_unitarios/features/home/presentation/pages/home_detalhes.dart';
 import 'package:app_testes_unitarios/features/login/presentation/controllers/login_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -151,7 +152,7 @@ class _HomePageState extends State<HomePage> {
             
                         
                         Text(
-                          '${homeController.products[index].title ?? 'Produto sem título'}',
+                          '${homeController.products[index].title}',
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 14,
@@ -162,7 +163,7 @@ class _HomePageState extends State<HomePage> {
             
                        
                         Text(
-                          'R\$ ${(index + 1) * 20},00',
+                          'R\$ ${homeController.products[index].price ?? 0}',
                           style: const TextStyle(
                             fontSize: 16,
                             color: Colors.green,
@@ -174,7 +175,12 @@ class _HomePageState extends State<HomePage> {
                           width: double.infinity,
                           height: 36,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (_) => HomeDetalhes(id: homeController.products[index].id)),
+                              );
+                            },
                             child: const Text('Ver detalhes'),
                           ),
                         ),
