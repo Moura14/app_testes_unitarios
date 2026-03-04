@@ -1,4 +1,5 @@
 import 'package:app_testes_unitarios/features/home/presentation/controllers/home_controller.dart';
+import 'package:app_testes_unitarios/features/home/presentation/pages/cart_detalhes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -140,7 +141,13 @@ class _HomeDetalhesState extends State<HomeDetalhes> {
           width: double.infinity,
           height: 50,
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              homeController.addCart(id: widget.id, quantity: 1);
+              Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => CarrinhoPage()),
+                      );
+            },
             child: const Text("Adicionar ao Carrinho"),
           ),
         ),

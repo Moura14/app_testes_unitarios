@@ -1,4 +1,5 @@
 import 'package:app_testes_unitarios/features/home/presentation/controllers/home_controller.dart';
+import 'package:app_testes_unitarios/features/home/presentation/pages/cart_detalhes.dart';
 import 'package:app_testes_unitarios/features/home/presentation/pages/home_detalhes.dart';
 import 'package:app_testes_unitarios/features/login/presentation/controllers/login_controller.dart';
 import 'package:flutter/material.dart';
@@ -63,6 +64,14 @@ class _HomePageState extends State<HomePage> {
            homeController.pesquisaProduto(produto: value);
           },
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.shopping_cart),
+            onPressed: (){
+              Navigator.push(context, MaterialPageRoute(builder: (_) => CarrinhoPage()));
+            },
+          )
+        ],
         leading: Builder(
           builder: (context) {
             return Padding(
@@ -77,7 +86,8 @@ class _HomePageState extends State<HomePage> {
                 ),
               );
           }
-        )
+        ),
+      
       ),
       body: Observer(
         builder: (_){

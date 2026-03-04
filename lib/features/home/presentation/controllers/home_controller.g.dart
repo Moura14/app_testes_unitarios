@@ -63,6 +63,24 @@ mixin _$HomeController on _HomeController, Store {
     });
   }
 
+  late final _$cartModelAtom = Atom(
+    name: '_HomeController.cartModel',
+    context: context,
+  );
+
+  @override
+  CartModel? get cartModel {
+    _$cartModelAtom.reportRead();
+    return super.cartModel;
+  }
+
+  @override
+  set cartModel(CartModel? value) {
+    _$cartModelAtom.reportWrite(value, super.cartModel, () {
+      super.cartModel = value;
+    });
+  }
+
   late final _$errorMessageAtom = Atom(
     name: '_HomeController.errorMessage',
     context: context,
@@ -103,12 +121,47 @@ mixin _$HomeController on _HomeController, Store {
     );
   }
 
+  late final _$pesquisaProdutoAsyncAction = AsyncAction(
+    '_HomeController.pesquisaProduto',
+    context: context,
+  );
+
+  @override
+  Future<void> pesquisaProduto({required String produto}) {
+    return _$pesquisaProdutoAsyncAction.run(
+      () => super.pesquisaProduto(produto: produto),
+    );
+  }
+
+  late final _$addCartAsyncAction = AsyncAction(
+    '_HomeController.addCart',
+    context: context,
+  );
+
+  @override
+  Future<void> addCart({required int id, required int quantity}) {
+    return _$addCartAsyncAction.run(
+      () => super.addCart(id: id, quantity: quantity),
+    );
+  }
+
+  late final _$getCartAsyncAction = AsyncAction(
+    '_HomeController.getCart',
+    context: context,
+  );
+
+  @override
+  Future<void> getCart() {
+    return _$getCartAsyncAction.run(() => super.getCart());
+  }
+
   @override
   String toString() {
     return '''
 isLoading: ${isLoading},
 products: ${products},
 productDetailsModel: ${productDetailsModel},
+cartModel: ${cartModel},
 errorMessage: ${errorMessage}
     ''';
   }

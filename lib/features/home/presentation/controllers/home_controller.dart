@@ -1,3 +1,4 @@
+import 'package:app_testes_unitarios/features/home/data/model/cart_model.dart';
 import 'package:app_testes_unitarios/features/home/data/model/product_details_model.dart';
 import 'package:app_testes_unitarios/features/home/data/model/product_model.dart';
 import 'package:app_testes_unitarios/features/home/domain/usecase/home_usecase.dart';
@@ -22,6 +23,10 @@ abstract class _HomeController with Store {
 
   @observable
   ProductDetailsModel? productDetailsModel;
+
+
+  @observable
+  CartModel? cartModel;
 
 
   @observable
@@ -68,4 +73,31 @@ abstract class _HomeController with Store {
     isLoading = false;
   
 }
+
+
+  @action
+  Future<void> addCart({required int id, required int quantity}) async {
+    isLoading = true;
+    try {
+      final response = await homeUseCase.addCart(id: id, quantity: quantity);
+      cartModel = response;
+    } catch (e) {
+      errorMessage = e.toString();
+    }
+    isLoading = false;
+  }
+
+  @action
+  Future<void> getCart() async {
+    isLoading = true;
+    try {
+      final response = await homeUseCase.getCart();
+      cartModel = response;
+      print('Carrinho carregado: ${cartModel?.products.length} produtos');
+    } catch (e) {
+      errorMessage = e.toString();
+      print('Erro ao carregar carrinho: $errorMessage');
+    }
+    isLoading = false;
+  }
 }
