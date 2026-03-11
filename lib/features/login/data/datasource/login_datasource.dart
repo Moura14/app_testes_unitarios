@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 
 abstract class LoginDatasource {
 
-  Future<UserModel> login({required String email, required String password});
+  Future<LoginModel> login({required String email, required String password});
   Future<UserModel> register({ required String nome, required String phone, required String email, required String password});
   Future<void> logout();
  
@@ -26,7 +26,7 @@ class LoginRemoteDataSourceImpl implements LoginDatasource {
   
 
   @override
-Future<UserModel> login({
+Future<LoginModel> login({
   required String email,
   required String password,
 }) async {
@@ -42,7 +42,7 @@ Future<UserModel> login({
       throw Exception('Usuário não encontrado');
     }
 
-    return UserModel.fromFirebase(user);
+    return LoginModel.fromFirebase(user);
   } on FirebaseAuthException catch (e) {
     throw Exception(e.message);
   }
@@ -52,23 +52,28 @@ Future<UserModel> login({
   @override
   Future<UserModel> register({required String nome, required String phone, required String email, required String password}) async{
     final result = await firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
-    final user = result.user;
+    final uid = result.user?.uid;
 
-    print(user);
-
-    if(user == null){
-      throw Exception('Erro ao criar usuário');
+    if (uid == null) {
+      throw Exception('Não foi possível obter o UID do usuário após o cadastro');
     }
 
-    await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-      'nome': nome,
-      'phone': phone,
-      'email': email,
-      'createdAt': DateTime.now()
+    final user = UserModel(
+      id: uid,
+      name: nome,
+      phone: phone,
+      email: email,
+    );
 
-    });
+    await FirebaseFirestore.instance
+      .collection('users')
+      .doc(uid)
+      .set({
+        ...user.toJson(),
+        'createdAt': DateTime.now(),
+      });
 
-    return UserModel.fromFirebase(user);
+    return user;
   }
 
   

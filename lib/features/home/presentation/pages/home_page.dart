@@ -23,6 +23,9 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+
+    controller.loadUserInfo();
+    
     homeController.getProduto().then((_) {
       print('produtos carregados ${homeController.products.length}');
     });
@@ -34,6 +37,8 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       drawer: Observer(
         builder: (_) {
+
+          final user = controller.userInfo;
           return Drawer(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -45,23 +50,33 @@ class _HomePageState extends State<HomePage> {
                   ),
                   const SizedBox(height: 20),
                   Divider(),
-                  const SizedBox(height: 20),
-                Text('Nome: Neymar'),
-                Text('Email: ney@gmail.com'),
-                Text('Telefone: 921-021021-'),
+                  ListTile(
+                    leading: Icon(Icons.person),
+                    title: Text(user?.name ?? 'Usuário'),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.email),
+                    title: Text(user?.email ?? 'Email'),
+                  ),
+                  ListTile(
+                  leading: const Icon(Icons.phone),
+                  title: Text('${user?.phone ?? 'N/A'}'),
+          ),
                 const SizedBox(height: 400),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.logout),
-                    TextButton(
-                      onPressed: () async {
-                        await controller.logout();
-                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => LoginPage()));
-                      },
-                      child: const Text('Sair'),
-                    ),
-                  ],
+                GestureDetector(
+                  onTap: () async {
+                    await controller.logout();
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => LoginPage()));
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.logout),
+                      const SizedBox(width: 10),
+                      Text('Sair', style: TextStyle(color: Colors.black)),
+        
+                    ],
+                  ),
                 )
               ],
             ),

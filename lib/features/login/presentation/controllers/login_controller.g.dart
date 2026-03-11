@@ -48,13 +48,13 @@ mixin _$LoginController on _LoginController, Store {
   late final _$userAtom = Atom(name: '_LoginController.user', context: context);
 
   @override
-  UserModel? get user {
+  LoginModel? get user {
     _$userAtom.reportRead();
     return super.user;
   }
 
   @override
-  set user(UserModel? value) {
+  set user(LoginModel? value) {
     _$userAtom.reportWrite(value, super.user, () {
       super.user = value;
     });
@@ -84,7 +84,7 @@ mixin _$LoginController on _LoginController, Store {
   );
 
   @override
-  Future<void> login(String username, String password) {
+  Future<LoginModel?> login(String username, String password) {
     return _$loginAsyncAction.run(() => super.login(username, password));
   }
 
@@ -108,6 +108,26 @@ mixin _$LoginController on _LoginController, Store {
         password: password,
       ),
     );
+  }
+
+  late final _$loadUserInfoAsyncAction = AsyncAction(
+    '_LoginController.loadUserInfo',
+    context: context,
+  );
+
+  @override
+  Future<void> loadUserInfo() {
+    return _$loadUserInfoAsyncAction.run(() => super.loadUserInfo());
+  }
+
+  late final _$logoutAsyncAction = AsyncAction(
+    '_LoginController.logout',
+    context: context,
+  );
+
+  @override
+  Future<void> logout() {
+    return _$logoutAsyncAction.run(() => super.logout());
   }
 
   @override

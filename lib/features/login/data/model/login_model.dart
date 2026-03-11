@@ -1,53 +1,20 @@
-import 'dart:convert';
+import 'package:app_testes_unitarios/features/login/domain/entites/user_entity.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class LoginModel {
-  final int id;
-  final String username;
-  final String email;
-  final String firstName;
-  final String lastName;
-  final String gender;
-  final String image;
-  final String accessToken;
-  final String refreshToken;
 
+class LoginModel extends UserEntity {
   LoginModel({
-    required this.id,
-    required this.username,
-    required this.email,
-    required this.firstName,
-    required this.lastName,
-    required this.gender,
-    required this.image,
-    required this.accessToken,
-    required this.refreshToken,
-  });
+    required String id,
+    required String email,
+  }) : super(
+          id: id,
+          email: email,
+        );
 
-  factory LoginModel.fromJson(Map<String, dynamic> json) {
+  factory LoginModel.fromFirebase(User user) {
     return LoginModel(
-      id: json['id'],
-      username: json['username'],
-      email: json['email'],
-      firstName: json['firstName'],
-      lastName: json['lastName'],
-      gender: json['gender'],
-      image: json['image'],
-      accessToken: json['accessToken'],
-      refreshToken: json['refreshToken'],
+      id: user.uid,
+      email: user.email ?? '',
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'username': username,
-      'email': email,
-      'firstName': firstName,
-      'lastName': lastName,
-      'gender': gender,
-      'image': image,
-      'accessToken': accessToken,
-      'refreshToken': refreshToken,
-    };
   }
 }

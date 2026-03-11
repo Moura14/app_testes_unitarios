@@ -1,5 +1,7 @@
 import 'package:app_testes_unitarios/features/login/data/model/login_model.dart';
 import 'package:app_testes_unitarios/features/login/data/model/user_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mobx/mobx.dart';
 import 'package:app_testes_unitarios/features/login/domain/usecase/login_usecase.dart';
 
@@ -20,29 +22,37 @@ abstract class _LoginController with Store {
   String? errorMessage;
 
   @observable
-  UserModel? user;
+  LoginModel? user;
 
   @observable
   UserModel? userInfo;
 
 
   @action
-  Future<void> login(String username, String password) async {
-    isLoading = true;
+Future<LoginModel?> login(String username, String password) async {
+  isLoading = true;
 
-    try{
-      user = await loginUseCase.login(email: username, password: password);
-      print(user);
-    }catch(e){
-      errorMessage = e.toString();
+  try {
+    user = await loginUseCase.login(email: username, password: password);
+
+    if (user != null) {
+      await loadUserInfo();
     }
+
+    return user;
+
+  } catch (e) {
+    errorMessage = e.toString();
+    return null;
+
+  } finally {
     isLoading = false;
   }
+}
 
   @action
   Future<UserModel?> cadastroUsuario({required String nome, required String phone, required String email, required String password}) async {
     isLoading = true;
-
     try {
       final registeredUser = await loginUseCase.register(
         nome: nome,
@@ -58,6 +68,44 @@ abstract class _LoginController with Store {
       return null;
     } finally {
       isLoading = false;
+    }
+  }
+
+
+  @action
+  Future<void> loadUserInfo() async {
+    final firebaseUser = FirebaseAuth.instance.currentUser;
+
+    if (firebaseUser == null) {
+      throw Exception("Usuário não autenticado");
+    }
+
+    final docRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc(firebaseUser.uid);
+
+    final doc = await docRef.get();
+
+    if (!doc.exists) {
+      final fallbackUser = UserModel(
+        id: firebaseUser.uid,
+        name: firebaseUser.displayName ?? '',
+        phone: '',
+        email: firebaseUser.email ?? '',
+      );
+
+      await docRef.set({
+        ...fallbackUser.toJson(),
+        'createdAt': DateTime.now(),
+      });
+
+      userInfo = fallbackUser;
+      return;
+    }
+
+    final data = doc.data();
+    if (data != null) {
+      userInfo = UserModel.fromJson(data, doc.id);
     }
   }
 
