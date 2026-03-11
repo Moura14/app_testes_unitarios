@@ -6,7 +6,9 @@ import 'package:app_testes_unitarios/features/login/data/datasource/login_dataso
 import 'package:app_testes_unitarios/features/login/domain/usecase/login_usecase.dart';
 import 'package:app_testes_unitarios/features/login/presentation/controllers/login_controller.dart';
 import 'package:app_testes_unitarios/features/login/data/repositories/login_repositories.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_it/get_it.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 
 
@@ -15,6 +17,14 @@ final getIt = GetIt.instance;
 void setupInjection() {
   // External
   getIt.registerLazySingleton<http.Client>(() => http.Client());
+
+  getIt.registerLazySingleton<FirebaseAuth>(
+  () => FirebaseAuth.instance,
+);
+
+  getIt.registerLazySingleton<FirebaseFirestore>(
+  () => FirebaseFirestore.instance,
+);
 
   // Datasource
   getIt.registerLazySingleton<LoginDatasource>(

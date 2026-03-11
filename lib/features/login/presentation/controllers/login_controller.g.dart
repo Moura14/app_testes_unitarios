@@ -48,13 +48,13 @@ mixin _$LoginController on _LoginController, Store {
   late final _$userAtom = Atom(name: '_LoginController.user', context: context);
 
   @override
-  LoginModel? get user {
+  UserModel? get user {
     _$userAtom.reportRead();
     return super.user;
   }
 
   @override
-  set user(LoginModel? value) {
+  set user(UserModel? value) {
     _$userAtom.reportWrite(value, super.user, () {
       super.user = value;
     });
@@ -88,14 +88,26 @@ mixin _$LoginController on _LoginController, Store {
     return _$loginAsyncAction.run(() => super.login(username, password));
   }
 
-  late final _$getUserAsyncAction = AsyncAction(
-    '_LoginController.getUser',
+  late final _$cadastroUsuarioAsyncAction = AsyncAction(
+    '_LoginController.cadastroUsuario',
     context: context,
   );
 
   @override
-  Future<void> getUser() {
-    return _$getUserAsyncAction.run(() => super.getUser());
+  Future<UserModel?> cadastroUsuario({
+    required String nome,
+    required String phone,
+    required String email,
+    required String password,
+  }) {
+    return _$cadastroUsuarioAsyncAction.run(
+      () => super.cadastroUsuario(
+        nome: nome,
+        phone: phone,
+        email: email,
+        password: password,
+      ),
+    );
   }
 
   @override

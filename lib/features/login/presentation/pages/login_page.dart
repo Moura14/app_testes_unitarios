@@ -1,4 +1,5 @@
 import 'package:app_testes_unitarios/features/login/presentation/controllers/login_controller.dart';
+import 'package:app_testes_unitarios/features/login/presentation/pages/cadastro_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -72,9 +73,11 @@ class _LoginPageState extends State<LoginPage> {
 
                     await controller.login(userNameController.text, passwordController.text);
 
-                    if (controller.errorMessage != null) {
+                    final error = controller.errorMessage;
+                    if (error != null && error.isNotEmpty) {
+                      print(error);
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(controller.errorMessage!))
+                        SnackBar(content: Text(error)),
                       );
                     } else if (controller.user != null) {
                       Navigator.pushReplacement(
@@ -87,6 +90,16 @@ class _LoginPageState extends State<LoginPage> {
                   child: Text('Login', style: TextStyle(color: Colors.white, fontSize: 15))),
               );
               },
+            ),
+
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => CadastroPage()),
+                );
+              },
+              child: Text('Não tem uma conta? Cadastre-se'),
             )
           ],
         ),

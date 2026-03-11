@@ -9,12 +9,12 @@ class LoginUsecase {
 
   LoginUsecase({required this.repositories});
 
-  Future<LoginModel> login({required String username, required String password}) async {
-    return await repositories.login(username: username, password: password);
+  Future<UserModel> login({required String email, required String password}) async {
+    return await repositories.login(email: email, password: password);
   }
 
-  Future<UserModel> getUser() async {
-    return await repositories.getUser();
+  Future<UserModel> register({required String nome, required String phone, required String email, required String password}) async {
+    return await repositories.register(nome: nome, phone: phone, email: email, password: password);
   }
 
 

@@ -20,7 +20,7 @@ abstract class _LoginController with Store {
   String? errorMessage;
 
   @observable
-  LoginModel? user;
+  UserModel? user;
 
   @observable
   UserModel? userInfo;
@@ -31,7 +31,7 @@ abstract class _LoginController with Store {
     isLoading = true;
 
     try{
-      user = await loginUseCase.login(username: username, password: password);
+      user = await loginUseCase.login(email: username, password: password);
       print(user);
     }catch(e){
       errorMessage = e.toString();
@@ -40,17 +40,25 @@ abstract class _LoginController with Store {
   }
 
   @action
-  Future<void> getUser() async {
+  Future<UserModel?> cadastroUsuario({required String nome, required String phone, required String email, required String password}) async {
     isLoading = true;
 
-    try{
-      userInfo = await loginUseCase.getUser();
-      print(userInfo);
-    }catch(e){
-      errorMessage = e.toString();
-    }
-    isLoading = false;
+    try {
+      final registeredUser = await loginUseCase.register(
+        nome: nome,
+        phone: phone,
+        email: email,
+        password: password,
+      );
 
+      userInfo = registeredUser;
+      return registeredUser;
+    } catch (e) {
+      errorMessage = e.toString();
+      return null;
+    } finally {
+      isLoading = false;
+    }
   }
 
 }

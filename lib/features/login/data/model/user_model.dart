@@ -1,44 +1,20 @@
-class UserModel {
-  final int id;
-  final String username;
-  final String email;
-  final String firstName;
-  final String lastName;
-  final String gender;
-  final String image;
+import 'package:app_testes_unitarios/features/login/domain/entites/user_entity.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
+
+class UserModel extends UserEntity {
   UserModel({
-    required this.id,
-    required this.username,
-    required this.email,
-    required this.firstName,
-    required this.lastName,
-    required this.gender,
-    required this.image,
-  });
+    required String id,
+    required String email,
+  }) : super(
+          id: id,
+          email: email,
+        );
 
-  factory UserModel.fromJson(Map<String, dynamic> json) {
+  factory UserModel.fromFirebase(User user) {
     return UserModel(
-      id: json['id'],
-      username: json['username'],
-      email: json['email'],
-      firstName: json['firstName'],
-      lastName: json['lastName'],
-      gender: json['gender'],
-      image: json['image'],
+      id: user.uid,
+      email: user.email ?? '',
     );
   }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'username': username,
-      'email': email,
-      'firstName': firstName,
-      'lastName': lastName,
-      'gender': gender,
-      'image': image,
-    };
-  }
-
 }

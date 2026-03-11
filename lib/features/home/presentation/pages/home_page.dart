@@ -22,7 +22,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    controller.getUser();
     homeController.getProduto().then((_) {
       print('produtos carregados ${homeController.products.length}');
     });
@@ -41,14 +40,14 @@ class _HomePageState extends State<HomePage> {
               children: [
                 CircleAvatar(
                   radius: 80,
-                    backgroundImage: NetworkImage(controller.userInfo?.image ?? 'https://www.pngall.com/wp-content/uploads/5/User-Profile-PNG-High-Quality-Image.png'),
+                    backgroundImage: NetworkImage('https://www.pngall.com/wp-content/uploads/5/User-Profile-PNG-High-Quality-Image.png'),
                   ),
                   const SizedBox(height: 20),
                   Divider(),
                   const SizedBox(height: 20),
-                Text('Nome: ${controller.userInfo?.firstName ?? 'No user'} ${controller.userInfo?.lastName ?? ''}'),
-                Text('Email: ${controller.userInfo?.email ?? 'No email'}'),
-                Text('Telefone: ${controller.userInfo?.username ?? 'No phone'}'),
+                Text('Nome: Neymar'),
+                Text('Email: ney@gmail.com'),
+                Text('Telefone: 921-021021-'),
               ],
             ),
           );
@@ -81,7 +80,7 @@ class _HomePageState extends State<HomePage> {
                     Scaffold.of(context).openDrawer();
                   },
                   child: CircleAvatar(
-                    backgroundImage: NetworkImage(controller.userInfo?.image ?? 'https://www.pngall.com/wp-content/uploads/5/User-Profile-PNG-High-Quality-Image.png'),
+                    backgroundImage: NetworkImage( 'https://www.pngall.com/wp-content/uploads/5/User-Profile-PNG-High-Quality-Image.png'),
                   ),
                 ),
               );
