@@ -2,6 +2,7 @@ import 'package:app_testes_unitarios/features/home/presentation/controllers/home
 import 'package:app_testes_unitarios/features/home/presentation/pages/cart_detalhes.dart';
 import 'package:app_testes_unitarios/features/home/presentation/pages/home_detalhes.dart';
 import 'package:app_testes_unitarios/features/login/presentation/controllers/login_controller.dart';
+import 'package:app_testes_unitarios/features/login/presentation/pages/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -48,6 +49,20 @@ class _HomePageState extends State<HomePage> {
                 Text('Nome: Neymar'),
                 Text('Email: ney@gmail.com'),
                 Text('Telefone: 921-021021-'),
+                const SizedBox(height: 400),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.logout),
+                    TextButton(
+                      onPressed: () async {
+                        await controller.logout();
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => LoginPage()));
+                      },
+                      child: const Text('Sair'),
+                    ),
+                  ],
+                )
               ],
             ),
           );

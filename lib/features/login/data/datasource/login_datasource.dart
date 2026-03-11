@@ -10,6 +10,7 @@ abstract class LoginDatasource {
 
   Future<UserModel> login({required String email, required String password});
   Future<UserModel> register({ required String nome, required String phone, required String email, required String password});
+  Future<void> logout();
  
 }
 
@@ -68,6 +69,12 @@ Future<UserModel> login({
     });
 
     return UserModel.fromFirebase(user);
+  }
+
+  
+  @override
+  Future<void> logout() async {
+    await firebaseAuth.signOut();
   }
 
 }

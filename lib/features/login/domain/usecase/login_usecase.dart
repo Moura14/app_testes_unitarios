@@ -17,6 +17,10 @@ class LoginUsecase {
     return await repositories.register(nome: nome, phone: phone, email: email, password: password);
   }
 
+  Future<void> logout() async {
+    await repositories.logout();
+  }
+
 
 
 }

@@ -61,4 +61,18 @@ abstract class _LoginController with Store {
     }
   }
 
+
+  @action
+  Future<void> logout() async {
+    isLoading = true;
+    try {
+      await loginUseCase.logout();
+      user = null;
+    } catch (e) {
+      errorMessage = e.toString();
+    } finally {
+      isLoading = false;
+    }
+  }
+
 }
